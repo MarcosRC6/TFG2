@@ -12,4 +12,9 @@ public class MenuSlots : MonoBehaviour
         SceneManager.LoadScene("MenuInicio");
     }
 
+    public void Temporal()
+    {
+        SceneManager.LoadScene("Selector_lvl");
+    }
+
 }

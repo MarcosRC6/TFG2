@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuPausa : MonoBehaviour
 {
@@ -18,5 +19,25 @@ public class MenuPausa : MonoBehaviour
         Time.timeScale = 1f;
         botonPausa.SetActive(true);
         menuPausa.SetActive(false);
+    }
+
+    public void salir()
+    {
+        SceneManager.LoadScene("MenuInicio");
+    }
+
+    public void SiguienteNivel()
+    {
+        int indiceEscenas = SceneManager.GetActiveScene().buildIndex;
+        int siguienteEscena = indiceEscenas + 1;
+
+        if (siguienteEscena < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(siguienteEscena);
+        }
+        else
+        {
+            Debug.LogWarning("No hay más niveles disponibles.");
+        }
     }
 }

@@ -14,6 +14,7 @@ public class MovimientoJugador : MonoBehaviour
     private Vector3 velocidad = Vector3.zero;
     private bool mirandoDerecha = true;
     private Animator animator;
+    public bool hit = false;
 
     [SerializeField] private float fuerzaSalto;
     [SerializeField] private LayerMask esSuelo;
@@ -23,9 +24,9 @@ public class MovimientoJugador : MonoBehaviour
     private bool salto = false;
     private bool agachado = false;
 
-    [SerializeField] private float gravedadNormal = 1f;
-    [SerializeField] private float gravedadAgachado = 3f;
-    [SerializeField] private float gravedadSA = 2f;
+    [SerializeField] private float gravedadNormal = 4f;
+    [SerializeField] private float gravedadAgachado = 6f;
+    [SerializeField] private float gravedadSA = 6f;
 
 
     // Start is called before the first frame update
@@ -79,7 +80,7 @@ public class MovimientoJugador : MonoBehaviour
             if (!agachado)
             {
                 corriendo = true;
-                velocidadDeMovimiento = 1000f;
+                velocidadDeMovimiento = 1150f;
             }
         }
         else if (Input.GetButtonUp("Horizontal") && !Input.GetKey(KeyCode.LeftShift))
@@ -97,7 +98,12 @@ public class MovimientoJugador : MonoBehaviour
         animator.SetBool("Andando", Mathf.Abs(movimientoHorizontal) >= 0.1f && Mathf.Abs(movimientoHorizontal) <= 850f);
         animator.SetBool("Corriendo", corriendo);
 
-
+        if (hit)
+        {
+            
+            rb2D.AddForce(new Vector2(0f, fuerzaSalto));
+            hit = false;
+        }
     }
 
     private void FixedUpdate()
@@ -110,7 +116,7 @@ public class MovimientoJugador : MonoBehaviour
 
         salto = false;
 
-        bool corriendo = Mathf.Abs(rb2D.velocity.x) >= 1000f || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        bool corriendo = Mathf.Abs(rb2D.velocity.x) >= 1150f || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
         //Si no esta en el suelo
         if (!enSuelo)
@@ -166,5 +172,11 @@ public class MovimientoJugador : MonoBehaviour
         Vector3 escala = transform.localScale;
         escala.x *= -1;
         transform.localScale = escala;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawCube(controladorSuelo.position, dimensionCaja);
     }
 }
