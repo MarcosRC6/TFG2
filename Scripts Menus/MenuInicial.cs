@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class MenuInicial : MonoBehaviour
 {
+    private void Awake()
+    {
+        BBDD.Connect();
+        BBDD.Create();
+    }
 
     public void Jugar()
     {

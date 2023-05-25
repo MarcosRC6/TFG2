@@ -12,9 +12,19 @@ public class MenuSlots : MonoBehaviour
         SceneManager.LoadScene("MenuInicio");
     }
 
-    public void Temporal()
+    public void Temporal(int idPartida)
     {
+        BBDD.seleccionarPartida(idPartida);
+        if (!BBDD.Comprobarslot(idPartida))
+            BBDD.nuevaPartida();
+
         SceneManager.LoadScene("Selector_lvl");
+    }
+
+    public void Borrar(int idPartida)
+    {
+        BBDD.seleccionarPartida(idPartida);
+        BBDD.borrarPartida();
     }
 
 }

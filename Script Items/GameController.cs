@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    static GameController current;
+    public static GameController current;
     static GameController current2;
     [SerializeField] private TextMeshProUGUI contadorMonedas;
     [SerializeField] private TextMeshProUGUI contadorVidas;
 
-    private int vidas = 5;
-    private int monedas =0;
+    public int vidas;
+    public int monedas;
 
     private void Awake()
     {
@@ -31,12 +31,19 @@ public class GameController : MonoBehaviour
         }
         current2 = this;
         DontDestroyOnLoad(gameObject);
+
+        int[] partida = BBDD.CargarPartida();
+        vidas = partida[0];
+        monedas = partida[1];
+        SetVidas(vidas);
+        SetMonedas(monedas);
     }
 
     public static void SumaMoneda()
     {
-        current.monedas++;
-        if(current.monedas < 10)
+        int cantidad = 1;
+        current.monedas += cantidad;
+        if (current.monedas < 10)
         {
             current.contadorMonedas.text = "0" + current.monedas;
 
@@ -83,6 +90,30 @@ public class GameController : MonoBehaviour
             {
                 current2.contadorVidas.text = current2.vidas.ToString();
             }
+        }
+    }
+
+    public static void SetVidas(int vidasNuevas)
+    {
+        if (vidasNuevas < 10)
+        {
+            current2.contadorVidas.text = "0" + vidasNuevas;
+        }
+        else
+        {
+            current2.contadorVidas.text = vidasNuevas.ToString();
+        }
+    }
+
+    public static void SetMonedas(int monedasNuevas)
+    {
+        if (monedasNuevas < 10)
+        {
+            current.contadorMonedas.text = "0" + monedasNuevas;
+        }
+        else
+        {
+            current.contadorMonedas.text = monedasNuevas.ToString();
         }
     }
 }

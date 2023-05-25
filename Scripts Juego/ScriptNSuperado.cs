@@ -7,12 +7,17 @@ public class ScriptNSuperado : MonoBehaviour
     public GameObject ControlSuperado;
     public GameObject NivelSuperado;
     public GameObject PantallaSuperado;
-    public GameObject personaje;
+    private GameObject personaje;
     public float xInicial, yInicial;
     // Start is called before the first frame update
     void Start()
     {
+        personaje = GameObject.FindWithTag("Player");
 
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+        }
         xInicial = ControlSuperado.transform.position.x;
         yInicial = ControlSuperado.transform.position.y;
 
@@ -21,6 +26,13 @@ public class ScriptNSuperado : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        personaje = GameObject.FindWithTag("Player");
+
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+        }
+
         Superado();
         Invoke("PSuperado", 2f);
     }
@@ -37,6 +49,8 @@ public class ScriptNSuperado : MonoBehaviour
     {
         if (personaje.transform.position.x >= xInicial && personaje.transform.position.y >= yInicial)
         {
+            BBDD.nivelSuperado();
+            BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
             PantallaSuperado.SetActive(true);
         }
     }

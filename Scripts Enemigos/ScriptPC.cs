@@ -7,34 +7,40 @@ public class ScriptPC : MonoBehaviour
 
     private Animator animator;
     private bool morder = true;
-    public float xInicial, yInicial;
-    public GameObject personaje;
-    public GameObject gameover;
 
     void Start()
     {
-        xInicial = personaje.transform.position.x;
-        yInicial = personaje.transform.position.y;
+        animator = GetComponent<Animator>();
         animator.SetBool("morder", morder);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Ataque")
         {
-            ActivarDesactivar();
+            Invoke("DestroyObject", 0.5f);
+        }
+        if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
+        {
+            if (collision.gameObject.CompareTag("PlayerItem"))
+            {
+                collision.gameObject.GetComponent<CambioPlayer>().CambioNormal();
+            }
+
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.GetComponent<CambioPlayer>().morir();
+            }
         }
     }
-
-    public void ActivarDesactivar()
+    private void DestroyObject()
     {
-        gameover.SetActive(true);
+        Destroy(gameObject);
     }
 }

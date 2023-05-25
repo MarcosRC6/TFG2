@@ -23,17 +23,33 @@ public class MenuPausa : MonoBehaviour
 
     public void salir()
     {
-        SceneManager.LoadScene("MenuInicio");
+        GameController.RestarVidas();
+        BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
+        if (GameController.current.vidas > 0)
+        {
+            SceneManager.LoadScene("MenuInicio");
+        }
+        if (GameController.current.vidas == 0)
+        {
+            BBDD.borrarPartida();
+            SceneManager.LoadScene("MenuInicio");
+        }
     }
 
     public void SiguienteNivel()
     {
-        int indiceEscenas = SceneManager.GetActiveScene().buildIndex;
-        int siguienteEscena = indiceEscenas + 1;
 
-        if (siguienteEscena < SceneManager.sceneCountInBuildSettings)
+        string nombreEscenaActual = SceneManager.GetActiveScene().name;
+        
+
+        // Aquí establece el nombre de la escena siguiente en función del nombre de la escena actual
+        if (nombreEscenaActual == "Nivel_1")
         {
-            SceneManager.LoadScene(siguienteEscena);
+            SceneManager.LoadScene("Nivel_2");
+        }
+        if (nombreEscenaActual == "Nivel_2")
+        {
+            SceneManager.LoadScene("Nivel_3");
         }
         else
         {

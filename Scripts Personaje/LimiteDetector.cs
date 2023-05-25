@@ -1,23 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LimiteDetector : MonoBehaviour
 {
    
     public float limiteInferior = -925.9f; // Coordenada y del límite inferior
     public float xInicial, yInicial;
-    public GameObject personaje; // Referencia al GameObject del personaje
+    private GameObject personaje; // Referencia al GameObject del personaje
     public GameObject gameover;
 
     void Start()
     {
-        xInicial = transform.position.x;
-        yInicial = transform.position.y;
+        personaje = GameObject.FindWithTag("Player");
+        xInicial = personaje.transform.position.x;
+        yInicial = personaje.transform.position.y;
     }
 
     public void Update()
     {
+        personaje = GameObject.FindWithTag("Player");
+
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+        }
+
         // Verificar la posición del personaje
         if (personaje.transform.position.y <= limiteInferior)
         {
@@ -28,8 +37,18 @@ public class LimiteDetector : MonoBehaviour
     public void RecolocarPersonaje()
     {
         GameController.RestarVidas();
-        Vector3 nuevaPosicion = new Vector3(xInicial, yInicial, 0f); // Coordenadas de ejemplo
-        personaje.transform.position = nuevaPosicion;
+        BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
+
+        if (GameController.current.vidas > 0)
+        {
+            int escenaActual = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(escenaActual);
+        }
+        if (GameController.current.vidas == 0)
+        {
+            BBDD.borrarPartida();
+            SceneManager.LoadScene("MenuInicio");
+        }
     }
 
     public void ActivarDesactivar()

@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class MenuNiveles : MonoBehaviour
 {
+    private int[] niveles;
+
+    public void Awake()
+    {
+        niveles = BBDD.ComprobarNivels();
+    }
 
     public void Volver()
     {
@@ -14,14 +20,17 @@ public class MenuNiveles : MonoBehaviour
 
     public void N1()
     {
-        SceneManager.LoadScene("Nivel_1");
+        
+            SceneManager.LoadScene("Nivel_1");
     }
     public void N2()
     {
-        SceneManager.LoadScene("Nivel_2");
+        if (niveles[0] == 1)
+            SceneManager.LoadScene("Nivel_2");
     }
     public void N3()
     {
-        SceneManager.LoadScene("Nivel_3");
+        if (niveles[1] == 1)
+            SceneManager.LoadScene("Nivel_3");
     }
 }

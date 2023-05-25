@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-public class ScriptGoomba : MonoBehaviour
+public class KoopaControlR : MonoBehaviour
 {
     public Transform PuntoA;
     public Transform PuntoB;
@@ -22,7 +23,7 @@ public class ScriptGoomba : MonoBehaviour
     {
 
         MyRB = GetComponent<Rigidbody2D>();
-        MoveToB = true;
+        MoveToA = true;
         animator = GetComponent<Animator>();
         Personaje = FindObjectOfType<CambioPlayer>();
 
@@ -52,9 +53,10 @@ public class ScriptGoomba : MonoBehaviour
             {
                 MoveToA = true;
                 MoveToB = false;
-            }
+                Flip();
 
-            animator.SetBool("andar", andando);
+            }
+                      
         }
 
         if (MoveToA)
@@ -64,21 +66,24 @@ public class ScriptGoomba : MonoBehaviour
             MyRB.transform.position = Vector2.MoveTowards(transform.position, new Vector2(PuntoA.position.x, transform.position.y), speed * Time.deltaTime);
             if (Vector2.Distance(transform.position, PuntoA.position) < 0.1f)
             {
-                
+
                 MoveToA = false;
                 MoveToB = true;
-            }
+                Flip();
 
-            animator.SetBool("andar", andando);
+
+            }
+                      
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Punto"))
+        if (collision.gameObject.CompareTag("Punto") || collision.gameObject.CompareTag("EnemigosPequeños"))
         {
             MoveToA = !MoveToA;
             MoveToB = !MoveToB;
+            
         }
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
@@ -133,8 +138,13 @@ public class ScriptGoomba : MonoBehaviour
         {
             DestroyObject();
         }
+    }
 
-
+    private void Flip()
+    {
+        
+        Vector2 ls = gameObject.transform.localScale;
+        ls.x *= -1;
+        transform.localScale = ls;
     }
 }
-
