@@ -21,14 +21,13 @@ public class DisparoSS : MonoBehaviour
     {
         if (puedeDisparar)
         {
+            // Crear la bala
             GameObject balaObject = Instantiate(bala, controladorDisparo.position, controladorDisparo.rotation);
             Bala balaScript = balaObject.GetComponent<Bala>();
             if (balaScript != null)
             {
                 balaScript.Inicializar(controladorDisparo.parent.localScale.x);
-
             }
-
             puedeDisparar = false;
             Invoke("ResetearDisparo", 5f); // Invocar el método para permitir el disparo después de 5 segundos
         }

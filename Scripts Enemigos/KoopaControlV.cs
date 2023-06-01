@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class KoopaControlV : MonoBehaviour
@@ -18,6 +17,7 @@ public class KoopaControlV : MonoBehaviour
     private Animator animator;
     private CambioPlayer Personaje;
     private Rigidbody2D MyRB;
+    [SerializeField] private GameObject efectoMuerte;
     public float limiteInferior = -925.9f;
 
     void Start()
@@ -32,6 +32,7 @@ public class KoopaControlV : MonoBehaviour
 
     void Update()
     {
+        Personaje = FindObjectOfType<CambioPlayer>();
         if (gameObject.transform.position.y <= limiteInferior)
         {
             DestroyObject();
@@ -89,7 +90,7 @@ public class KoopaControlV : MonoBehaviour
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {
-            if (collision.gameObject.tag == "Player" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
+            if (collision.gameObject.tag == "Player" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 3f)
             {
                 if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
                 {
@@ -102,7 +103,7 @@ public class KoopaControlV : MonoBehaviour
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
 
                 }
                 else
@@ -114,7 +115,7 @@ public class KoopaControlV : MonoBehaviour
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {
-            if (collision.gameObject.tag == "PlayerItem" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
+            if (collision.gameObject.tag == "PlayerItem" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 3f)
             {
                 if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
 
@@ -126,7 +127,7 @@ public class KoopaControlV : MonoBehaviour
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
                 }
                 else
                 {
@@ -137,7 +138,8 @@ public class KoopaControlV : MonoBehaviour
 
         if (collision.gameObject.tag == "Ataque")
         {
-            DestroyObject();
+            Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+            DestroyObject(gameObject);
         }
     }
 

@@ -10,12 +10,14 @@ public class GameController : MonoBehaviour
     static GameController current2;
     [SerializeField] private TextMeshProUGUI contadorMonedas;
     [SerializeField] private TextMeshProUGUI contadorVidas;
-
+  
     public int vidas;
     public int monedas;
 
     private void Awake()
     {
+        
+
         if (current != null && current != this)
         {
             Destroy(gameObject);

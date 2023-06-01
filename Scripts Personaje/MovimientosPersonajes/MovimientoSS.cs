@@ -24,10 +24,14 @@ public class MovimientoSS : MonoBehaviour
     private bool salto = false;
     private bool agachado = false;
 
+    public AudioSource audioSalto;
+    public AudioSource audioAndar;
+
     [SerializeField] private float gravedadNormal = 4f;
     [SerializeField] private float gravedadAgachado = 6f;
     [SerializeField] private float gravedadSA = 6f;
 
+    
 
     // Start is called before the first frame update
     void Start()
@@ -66,15 +70,19 @@ public class MovimientoSS : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             salto = true;
+            audioSalto.Play();
 
             if (agachado && Input.GetButtonDown("Jump"))
             {
+                
                 salto = true;
+                audioSalto.Play();
                 rb2D.gravityScale = gravedadSA;
             }
 
         }
 
+        
         // Correr
         if (Input.GetButton("Horizontal") && Input.GetKey(KeyCode.LeftShift))
         {
@@ -82,16 +90,43 @@ public class MovimientoSS : MonoBehaviour
             if (!agachado)
             {
                 corriendo = true;
+                if (!audioAndar.isPlaying)
+                {
+                    audioAndar.Play();
+                }
                 velocidadDeMovimiento = 1350f;
             }
+            else
+            {
+                corriendo = false;
+                audioAndar.Stop();
+            }
+
+            if (!enSuelo)
+            {
+                audioAndar.Stop();
+            }
         }
-        else if (Input.GetButtonUp("Horizontal") && !Input.GetKey(KeyCode.LeftShift))
+        else if (Input.GetButton("Horizontal") && !Input.GetKey(KeyCode.LeftShift))
         {
             // Andar si no está agachado
             if (!agachado)
             {
                 corriendo = false;
+                if (!audioAndar.isPlaying)
+                {
+                    audioAndar.Play();
+                }
                 velocidadDeMovimiento = 1000f;
+            }
+            else
+            {
+                audioAndar.Stop();
+            }
+
+            if (!enSuelo)
+            {
+                audioAndar.Stop();
             }
         }
 

@@ -23,6 +23,7 @@ public class MenuPausa : MonoBehaviour
 
     public void salir()
     {
+        
         GameController.RestarVidas();
         BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
         if (GameController.current.vidas > 0)
@@ -38,18 +39,12 @@ public class MenuPausa : MonoBehaviour
 
     public void SiguienteNivel()
     {
+        int escenaActualIndex = SceneManager.GetActiveScene().buildIndex;
+        int siguienteEscenaIndex = escenaActualIndex + 1;
 
-        string nombreEscenaActual = SceneManager.GetActiveScene().name;
-        
-
-        // Aquí establece el nombre de la escena siguiente en función del nombre de la escena actual
-        if (nombreEscenaActual == "Nivel_1")
+        if (siguienteEscenaIndex < SceneManager.sceneCountInBuildSettings)
         {
-            SceneManager.LoadScene("Nivel_2");
-        }
-        if (nombreEscenaActual == "Nivel_2")
-        {
-            SceneManager.LoadScene("Nivel_3");
+            SceneManager.LoadScene(siguienteEscenaIndex);
         }
         else
         {

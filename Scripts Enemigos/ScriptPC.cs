@@ -7,6 +7,7 @@ public class ScriptPC : MonoBehaviour
 
     private Animator animator;
     private bool morder = true;
+    [SerializeField] private GameObject efectoMuerte;
 
     void Start()
     {
@@ -24,7 +25,8 @@ public class ScriptPC : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ataque")
         {
-            Invoke("DestroyObject", 0.5f);
+            Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+            DestroyObject(gameObject);
         }
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {

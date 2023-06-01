@@ -13,18 +13,24 @@ public class CambioPlayer : MonoBehaviour
     public GameObject Jugador;
     public GameObject AnimacionPB;
     public GameObject AnimacionPM;
+    public GameObject GatoAyuda;
+
+    [SerializeField] public AudioSource audioCoin;
+    public GameObject gameover;
+
 
     private Rigidbody2D rb2D;
     private Animator animator;
 
     public bool hit = false;
     public bool tieneItemPB = false;
+    public bool tieneItemGA = false;
     public bool tieneItemPM = false;
 
     private GameObject jugadorActual;
     public bool normal;
     public bool muerte;
-    public GameObject gameover;
+    
 
 
     // Start is called before the first frame update
@@ -67,8 +73,8 @@ public class CambioPlayer : MonoBehaviour
 
     public void CambioNormal()
     {
-        float distanciaSalto = 3f;
-        Vector3 direccionSalto = new Vector3(-1, 1, 0); // Dirección diagonal hacia arriba y a la izquierda
+        float distanciaSalto = 5f;
+        Vector3 direccionSalto = new Vector3(0, 1, 0); // Dirección diagonal hacia arriba y a la izquierda
         transform.Translate(direccionSalto.normalized * distanciaSalto);
 
         jugadorActual.SetActive(false);
@@ -133,10 +139,22 @@ public class CambioPlayer : MonoBehaviour
             StartCoroutine(DuracionItemPM(20f));
         }
 
+        if (collision.gameObject.CompareTag("ItemGatoAyuda"))
+        {
+            tieneItemGA = true;
+            GatoAyuda.gameObject.SetActive(true);
+        }
+
+        if (collision.gameObject.CompareTag("Coin"))
+        {
+            audioCoin.Play();
+        }
+
         if (collision.gameObject.CompareTag("EnemigosPequeños"))
         {
-            if(tieneItemPM)
+            if (tieneItemPM)
             {
+                collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
                 Destroy(collision.gameObject);
             }
         }
@@ -161,9 +179,11 @@ public class CambioPlayer : MonoBehaviour
     public void morir()
     {
         muerte = true;
+        jugadorActual.GetComponent<Collider2D>().isTrigger = true;
+        jugadorActual.GetComponent<CapsuleCollider2D>().isTrigger = true;
         animator.SetBool("Muerto", muerte);
         float distanciaSalto = 1.5f;
-        Vector3 direccionSalto = new Vector3(-1, 1, 0); // Dirección diagonal hacia arriba y a la izquierda
+        Vector3 direccionSalto = new Vector3(0, 3, 0); // Dirección diagonal hacia arriba y a la izquierda
         transform.Translate(direccionSalto.normalized * distanciaSalto);
         StartCoroutine(EsperarAnimacionYActivarDesactivar());
         muerte = false;
@@ -185,84 +205,3 @@ public class CambioPlayer : MonoBehaviour
 
     }
 }
-
-
-/*if (collision.gameObject.CompareTag("EnemigosPequeños"))
-{
-    if (!normal)
-    {
-        float distanciaSalto = 3f;
-        Vector3 direccionSalto = new Vector3(-1, 1, 0); // Dirección diagonal hacia arriba y a la izquierda
-        transform.Translate(direccionSalto.normalized * distanciaSalto);
-
-        jugadorActual.SetActive(false);
-
-        Jugador.transform.position = jugadorActual.transform.position;
-        Jugador.SetActive(true);
-
-        jugadorActual = Jugador;
-        normal = true;
-    }
-}*/
-
-
-
-
-
-/*if (collision.gameObject.CompareTag("ItemSS"))
-{
-    jugadorActual.SetActive(false);
-
-    GameObject nuevoJugador = Instantiate(JugadorSS, transform.position, Quaternion.identity);
-    nuevoJugador.SetActive(true);
-
-    jugadorActual = nuevoJugador;
-    normal = false;
-    Destroy(collision.gameObject);
-
-}
-
-if (collision.gameObject.CompareTag("ItemSM"))
-{
-    jugadorActual.SetActive(false);
-
-    GameObject nuevoJugador = Instantiate(JugadorSM, transform.position, Quaternion.identity);
-    nuevoJugador.SetActive(true);
-
-    jugadorActual = nuevoJugador;
-    normal = false;
-    Destroy(collision.gameObject);
-}
-
-if (collision.gameObject.CompareTag("ItemCH"))
-{
-
-    jugadorActual.SetActive(false);
-
-    GameObject nuevoJugador = Instantiate(JugadorCh, transform.position, Quaternion.identity);
-    nuevoJugador.SetActive(true);
-
-
-    jugadorActual = nuevoJugador;
-    normal = false;
-    Destroy(collision.gameObject);
-}
-
-if (collision.gameObject.CompareTag("EnemigosPequeños"))
-{
-    if (!normal)
-    {
-        jugadorActual.SetActive(false);
-
-        GameObject nuevoJugador = Instantiate(Jugador, transform.position, Quaternion.identity);
-        nuevoJugador.SetActive(true);
-        float distanciaSalto = 1.5f;
-        Vector3 direccionSalto = new Vector3(-1, 1, 0); // Dirección diagonal hacia arriba y a la izquierda
-        transform.Translate(direccionSalto.normalized * distanciaSalto);
-        jugadorActual = nuevoJugador;
-        normal = true;
-    }
-}*/
-
-
-

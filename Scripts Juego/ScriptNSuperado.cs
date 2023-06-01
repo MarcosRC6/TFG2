@@ -49,9 +49,30 @@ public class ScriptNSuperado : MonoBehaviour
     {
         if (personaje.transform.position.x >= xInicial && personaje.transform.position.y >= yInicial)
         {
-            BBDD.nivelSuperado();
-            BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
-            PantallaSuperado.SetActive(true);
+            int[] niveles = BBDD.ComprobarNivels();
+            if (BBDD.idNivel < niveles.Length)
+            {
+                if (niveles[BBDD.idNivel] == 0)
+                {
+                    BBDD.nivelSuperado();
+                    BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
+                    PantallaSuperado.SetActive(true);
+                }
+                
+
+                if (niveles[BBDD.idNivel] == 1)
+                {
+                    BBDD.nivelSuperado();
+                    BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
+                    PantallaSuperado.SetActive(true);
+                }
+            }
+            if (niveles[BBDD.idNivel] == 2)
+            {
+                BBDD.nivelSuperado();
+                BBDD.guaardarPartida(GameController.current.vidas, GameController.current.monedas);
+                PantallaSuperado.SetActive(true);
+            }
         }
     }
 }

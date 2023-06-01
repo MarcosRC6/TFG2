@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class ScriptGoomba : MonoBehaviour
@@ -15,14 +14,20 @@ public class ScriptGoomba : MonoBehaviour
     public bool morir = false;
     public bool canMove = true;
     private Animator animator;
+    private GameObject personaje;
     private CambioPlayer Personaje;
     private Rigidbody2D MyRB;
+    [SerializeField] private GameObject efectoMuerte;
 
     void Start()
     {
-
+        personaje = GameObject.FindWithTag("Player");
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+        }
         MyRB = GetComponent<Rigidbody2D>();
-        MoveToB = true;
+        MoveToA = true;
         animator = GetComponent<Animator>();
         Personaje = FindObjectOfType<CambioPlayer>();
 
@@ -30,6 +35,15 @@ public class ScriptGoomba : MonoBehaviour
 
     void Update()
     {
+        personaje = GameObject.FindWithTag("Player");
+        Personaje = FindObjectOfType<CambioPlayer>();
+
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+            Personaje = FindObjectOfType<CambioPlayer>();
+        }
+
         if (canMove)
         {
             mover();
@@ -52,6 +66,7 @@ public class ScriptGoomba : MonoBehaviour
             {
                 MoveToA = true;
                 MoveToB = false;
+                
             }
 
             animator.SetBool("andar", andando);
@@ -67,6 +82,7 @@ public class ScriptGoomba : MonoBehaviour
                 
                 MoveToA = false;
                 MoveToB = true;
+                
             }
 
             animator.SetBool("andar", andando);
@@ -79,24 +95,25 @@ public class ScriptGoomba : MonoBehaviour
         {
             MoveToA = !MoveToA;
             MoveToB = !MoveToB;
+            
         }
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {
             if (collision.gameObject.tag == "Player" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
             {
-                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
+                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.3f)
                 {
 
 
                     float alturaSalto = 0.2f;
 
                     Personaje.hit = true;
-                    collision.transform.Translate(Vector3.up * alturaSalto);
+                    personaje.transform.Translate(Vector3.up * alturaSalto);
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
 
                 }
                 else
@@ -110,17 +127,17 @@ public class ScriptGoomba : MonoBehaviour
         {
             if (collision.gameObject.tag == "PlayerItem" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
             {
-                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
+                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.3f)
 
                 {
                     float alturaSalto = 0.2f;
 
                     Personaje.hit = true;
-                    collision.transform.Translate(Vector3.up * alturaSalto);
+                    personaje.transform.Translate(Vector3.up * alturaSalto);
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
                 }
                 else
                 {
@@ -131,10 +148,19 @@ public class ScriptGoomba : MonoBehaviour
 
         if (collision.gameObject.tag == "Ataque")
         {
-            DestroyObject();
+            Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+            DestroyObject(gameObject);
         }
 
 
+    }
+
+    private void Flip()
+    {
+
+        Vector2 ls = gameObject.transform.localScale;
+        ls.x *= -1;
+        transform.localScale = ls;
     }
 }
 

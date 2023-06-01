@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class KoopaControlR : MonoBehaviour
@@ -16,12 +15,18 @@ public class KoopaControlR : MonoBehaviour
     public bool morir = false;
     public bool canMove = true;
     private Animator animator;
+    private GameObject personaje;
     private CambioPlayer Personaje;
     private Rigidbody2D MyRB;
+    [SerializeField] private GameObject efectoMuerte;
 
     void Start()
     {
-
+        personaje = GameObject.FindWithTag("Player");
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+        }
         MyRB = GetComponent<Rigidbody2D>();
         MoveToA = true;
         animator = GetComponent<Animator>();
@@ -31,6 +36,15 @@ public class KoopaControlR : MonoBehaviour
 
     void Update()
     {
+        personaje = GameObject.FindWithTag("Player");
+        Personaje = FindObjectOfType<CambioPlayer>();
+
+        if (personaje == null)
+        {
+            personaje = GameObject.FindWithTag("PlayerItem");
+            Personaje = FindObjectOfType<CambioPlayer>();
+        }
+
         if (canMove)
         {
             mover();
@@ -54,9 +68,9 @@ public class KoopaControlR : MonoBehaviour
                 MoveToA = true;
                 MoveToB = false;
                 Flip();
-
             }
-                      
+
+            animator.SetBool("andar", andando);
         }
 
         if (MoveToA)
@@ -70,38 +84,37 @@ public class KoopaControlR : MonoBehaviour
                 MoveToA = false;
                 MoveToB = true;
                 Flip();
-
-
             }
-                      
+
+            animator.SetBool("andar", andando);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Punto") || collision.gameObject.CompareTag("EnemigosPequeños"))
+        if (collision.gameObject.CompareTag("Punto"))
         {
             MoveToA = !MoveToA;
             MoveToB = !MoveToB;
-            
+
         }
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {
-            if (collision.gameObject.tag == "Player" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
+            if (collision.gameObject.tag == "Player" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 3f)
             {
-                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
+                if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1f)
                 {
 
 
                     float alturaSalto = 0.2f;
 
                     Personaje.hit = true;
-                    collision.transform.Translate(Vector3.up * alturaSalto);
+                    personaje.transform.Translate(Vector3.up * alturaSalto);
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
 
                 }
                 else
@@ -113,7 +126,7 @@ public class KoopaControlR : MonoBehaviour
 
         if (collision.gameObject.GetComponent<CambioPlayer>().tieneItemPM == false)
         {
-            if (collision.gameObject.tag == "PlayerItem" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 2.5f)
+            if (collision.gameObject.tag == "PlayerItem" && Mathf.Abs(gameObject.transform.position.y - collision.gameObject.transform.position.y) < 3f)
             {
                 if (Mathf.Abs(gameObject.transform.position.x - collision.gameObject.transform.position.x) < 1.5f)
 
@@ -121,11 +134,11 @@ public class KoopaControlR : MonoBehaviour
                     float alturaSalto = 0.2f;
 
                     Personaje.hit = true;
-                    collision.transform.Translate(Vector3.up * alturaSalto);
+                    personaje.transform.Translate(Vector3.up * alturaSalto);
                     canMove = false;
                     morir = true;
                     animator.SetBool("morir", morir);
-                    Invoke("DestroyObject", 0.5f);
+                    Invoke("DestroyObject", 0.25f);
                 }
                 else
                 {
@@ -136,13 +149,16 @@ public class KoopaControlR : MonoBehaviour
 
         if (collision.gameObject.tag == "Ataque")
         {
-            DestroyObject();
+            Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+            DestroyObject(gameObject);
         }
+
+
     }
 
     private void Flip()
     {
-        
+
         Vector2 ls = gameObject.transform.localScale;
         ls.x *= -1;
         transform.localScale = ls;

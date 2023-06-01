@@ -28,9 +28,11 @@ public class DisparoChancla : MonoBehaviour
                 balaScript.Inicializar(controladorDisparo.parent.localScale.x);
 
             }
+            
+           
 
             puedeDisparar = false;
-            Invoke("ResetearDisparo", 5f); // Invocar el método para permitir el disparo después de 5 segundos
+            Invoke("ResetearDisparo", 3f); // Invocar el método para permitir el disparo después de 5 segundos
         }
     }
 

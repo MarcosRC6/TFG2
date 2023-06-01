@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bala : MonoBehaviour
+public class BalaCH : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private float velocidad;
     private float direccion = 1f;
-    public int daño;
-    [SerializeField] private GameObject efectoMuerte;
 
     private void Update()
     {
@@ -20,13 +18,11 @@ public class Bala : MonoBehaviour
     {
         if (other.gameObject.CompareTag("EnemigosPequeños"))
         {
-
-            Instantiate(efectoMuerte, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
         }
         if (other.gameObject.CompareTag("EnemigoGrande"))
         {
-            other.gameObject.GetComponent<EnemigoGrande>().TomarDaño(daño);
+            other.gameObject.GetComponent<EnemigoGrande>().TomarDaño(20);
             Destroy(gameObject);
         }
     }

@@ -14,16 +14,16 @@ public class BBDD
 {
     private static IDbConnection dbconn;
     private static int idPartida;
-    private static int idNivel;
+    public static int idNivel;
     private static int NUMERO_NIVELES = 3;
 
+    
     public static void Connect()
     {
-        string conn = "URI=file:" + Application.dataPath + "/Database/zombs.db"; //Path to database.
+        string conn = "URI=file:" + Application.dataPath + "/StreamingAssets/zombs.db"; //Path to database.
         Debug.Log("Conexión " + conn);
         dbconn = (IDbConnection)new SqliteConnection(conn);
     }
-
     public static bool Create()
     {
         dbconn.Open();
@@ -49,7 +49,7 @@ public class BBDD
 
         if (reader.Read())
         {
-            
+
             reader.Close();
             dbconn.Close();
             return true;
@@ -74,7 +74,7 @@ public class BBDD
         for (int i = 0; reader.Read(); i++)
         {
             niveles[reader.GetInt32(0)] = reader.GetInt32(1);
-            
+
 
         }
         reader.Close();
@@ -138,7 +138,7 @@ public class BBDD
     public static bool nivelSuperado()
     {
         dbconn.Open();
-        string queryNP = "update niveles set pasado = 1 where idNivel=" + idNivel + " and "+idPartida+";";
+        string queryNP = "update niveles set pasado = 1 where idNivel=" + idNivel + " and " + idPartida + ";";
         IDbCommand dbcmd = dbconn.CreateCommand();
         dbcmd.CommandText = queryNP;
         dbcmd.ExecuteNonQuery();

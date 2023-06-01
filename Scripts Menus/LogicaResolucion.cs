@@ -25,13 +25,14 @@ public class LogicaResolucion : MonoBehaviour
 
         RevisarResolucion();
     }
-
+    
     public void RevisarResolucion()
     {
         resoluciones = Screen.resolutions;
         resolucionDropDown.ClearOptions();
         List<string> opciones = new List<string>();
         int resolucionActual = 0;
+        int maxResolucionIndex = resoluciones.Length - 1;
         
         for (int i = 0; i<resoluciones.Length; i++)
         {
@@ -47,10 +48,10 @@ public class LogicaResolucion : MonoBehaviour
         }
 
         resolucionDropDown.AddOptions(opciones);
-        resolucionDropDown.value = resolucionActual;
+        resolucionDropDown.value = maxResolucionIndex;
         resolucionDropDown.RefreshShownValue();
 
-        resolucionDropDown.value = PlayerPrefs.GetInt("numeroResolucion", 0);
+        resolucionDropDown.value = PlayerPrefs.GetInt("numeroResolucion", resolucionActual);
     }
 
     public void CambiarResolucion(int indiceResolucion)

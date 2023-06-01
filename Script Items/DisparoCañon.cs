@@ -9,6 +9,7 @@ public class DisparoCañon : MonoBehaviour
     private bool puedeDisparar = true;
     private Animator animator;
     private float duracionAnimacion = 2.5f;
+    public AudioSource audioCañon;
 
     private void Start()
     {
@@ -40,13 +41,14 @@ public class DisparoCañon : MonoBehaviour
             if (puedeDisparar)
             {
                 animator.SetBool("Disparo", true);
-                yield return new WaitForSeconds(1.25f); // Espera 1.25 segundos para sincronizar con la mitad de la animación
+                yield return new WaitForSeconds(1.25f); 
                 GameObject balaObject = Instantiate(bala, controladorDisparo.position, controladorDisparo.rotation);
-                yield return new WaitForSeconds(duracionAnimacion - 1.25f); // Espera el tiempo restante de la animación
-                animator.SetBool("Disparo", false); // Restablece el parámetro de animación a falso
+                audioCañon.Play();
+                yield return new WaitForSeconds(duracionAnimacion - 1.25f);
+                animator.SetBool("Disparo", false); 
             }
 
-            yield return new WaitForSeconds(6f); // Espera 6 segundos antes del próximo disparo
+            yield return new WaitForSeconds(4f); 
         }
     }
 
